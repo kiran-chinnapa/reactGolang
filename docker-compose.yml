@@ -1,0 +1,18 @@
+services:
+  api:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: reactgolang-api
+    ports:
+      - "8080:8080"
+
+  web:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: reactgolang-web
+    depends_on:
+      - api
+    ports:
+      - "5173:80"

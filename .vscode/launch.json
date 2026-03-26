@@ -1,0 +1,74 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug Go API",
+      "type": "go",
+      "request": "launch",
+      "mode": "auto",
+      "program": "${workspaceFolder}/backend",
+      "cwd": "${workspaceFolder}/backend",
+      "env": {
+        "PORT": "8080"
+      }
+    },
+    {
+      "name": "Debug React (Chrome)",
+      "type": "pwa-chrome",
+      "request": "launch",
+      "url": "http://localhost:5173",
+      "webRoot": "${workspaceFolder}/frontend",
+      "preLaunchTask": "frontend: dev"
+    },
+    {
+      "name": "Attach Go API (Docker Delve)",
+      "type": "go",
+      "debugAdapter": "legacy",
+      "request": "attach",
+      "mode": "remote",
+      "host": "127.0.0.1",
+      "port": 2345,
+      "apiVersion": 2,
+      "remotePath": "/app",
+      "program": "${workspaceFolder}/backend",
+      "cwd": "${workspaceFolder}/backend",
+      "showLog": true,
+      "substitutePath": [
+        {
+          "from": "${workspaceFolder}/backend",
+          "to": "/app"
+        },
+        {
+          "from": "/app",
+          "to": "${workspaceFolder}/backend"
+        }
+      ],
+      "preLaunchTask": "docker: debug prepare"
+    },
+    {
+      "name": "Debug React (Chrome, Docker)",
+      "type": "pwa-chrome",
+      "request": "launch",
+      "url": "http://localhost:5174",
+      "webRoot": "${workspaceFolder}/frontend"
+    }
+  ],
+  "compounds": [
+    {
+      "name": "Debug Full Stack (Go + React)",
+      "configurations": [
+        "Debug Go API",
+        "Debug React (Chrome)"
+      ],
+      "stopAll": true
+    },
+    {
+      "name": "Debug Full Stack (Docker)",
+      "configurations": [
+        "Attach Go API (Docker Delve)",
+        "Debug React (Chrome, Docker)"
+      ],
+      "stopAll": false
+    }
+  ]
+}

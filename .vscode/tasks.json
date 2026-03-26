@@ -1,0 +1,66 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "docker: debug up",
+      "type": "shell",
+      "command": "docker compose -f docker-compose.debug.yml up -d --no-recreate",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "docker: wait for delve",
+      "type": "shell",
+      "command": "sh -c 'for i in $(seq 1 60); do nc -z 127.0.0.1 2345 && exit 0; sleep 1; done; echo Delve was not ready on port 2345 after 60s; exit 1'",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "docker: debug prepare",
+      "dependsOrder": "sequence",
+      "dependsOn": [
+        "docker: debug up",
+        "docker: wait for delve"
+      ],
+      "problemMatcher": []
+    },
+    {
+      "label": "docker: debug down",
+      "type": "shell",
+      "command": "docker compose -f docker-compose.debug.yml down",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "frontend: dev",
+      "type": "shell",
+      "command": "npm run dev -- --host 127.0.0.1 --port 5173",
+      "options": {
+        "cwd": "${workspaceFolder}/frontend"
+      },
+      "isBackground": true,
+      "problemMatcher": {
+        "owner": "custom",
+        "pattern": {
+          "regexp": "^(.*)$",
+          "message": 1
+        },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "^\\s*VITE\\s*v",
+          "endsPattern": "Local:\\s+http://(127\\.0\\.0\\.1|localhost):5173"
+        }
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated"
+      }
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+
+
+#Ignore vscode AI rules
+.github/instructions/codacy.instructions.md
+
+# macOS
+.DS_Store
+
+# frontend
+frontend/node_modules/
+frontend/dist/
+
+# backend
+backend/bin/
+backend/__debug_bin*
+*.log
